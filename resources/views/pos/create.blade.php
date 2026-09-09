@@ -32,6 +32,13 @@
         >
             <p class="font-medium">{{ $product->name }}</p>
 
+            {{-- Badge Stok Menipis --}}
+            @if ($product->stock < 10)
+                <span class="bg-amber-100 text-amber-700 px-2 py-1 rounded text-xs">
+                    Stok Menipis
+                </span>
+            @endif
+
             <p class="text-sm text-slate-500">
                 Rp {{ number_format($product->price) }}
             </p>
