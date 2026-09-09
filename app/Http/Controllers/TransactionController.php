@@ -36,9 +36,9 @@ class TransactionController extends Controller
     {
         return 'Transaksi disimpan (belum ada logika penyimpanan)';
     }
-    public function index()
+    public function index(): View
     {
-        return 'Daftar transaksi';
+        return view('transactions.index');
     }
     public function show(string $id)
     {
