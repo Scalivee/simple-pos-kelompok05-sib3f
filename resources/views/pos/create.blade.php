@@ -13,6 +13,10 @@
         this.cart.push({ id, name, price });
     },
 
+    removeFromCart(id) {
+        this.cart = this.cart.filter(item => item.id !== id);
+    },
+
     subtotal() {
         return this.cart.reduce((sum, item) => sum + item.price, 0);
     }
@@ -40,7 +44,19 @@
     <div class="mt-4 border-t pt-3">
 
         <template x-for="item in cart" :key="item.id">
-            <p x-text="item.name + ' - Rp ' + item.price"></p>
+            <div class="flex items-center justify-between mb-2">
+
+                <p x-text="item.name + ' - Rp ' + item.price"></p>
+
+                <button
+                    type="button"
+                    @click="removeFromCart(item.id)"
+                    class="bg-red-600 text-white px-3 py-1 rounded-md text-sm font-medium hover:bg-red-700 transition"
+                >
+                    Hapus
+                </button>
+
+            </div>
         </template>
 
         <p class="font-semibold mt-2">
