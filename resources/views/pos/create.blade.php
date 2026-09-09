@@ -8,8 +8,10 @@
 
 <div x-data="{
     cart: [],
+    selectedId: null,
 
     addToCart(id, name, price) {
+        this.selectedId = id;
         this.cart.push({ id, name, price });
     },
 
@@ -27,7 +29,8 @@
         @foreach ($products as $product)
 
         <div
-            class="border rounded-md p-3 cursor-pointer"
+            class="border rounded-md p-3 cursor-pointer transition"
+            :class="selectedId === {{ $product->id }} ? 'ring-2 ring-blue-500' : ''"
             @click="addToCart({{ $product->id }}, '{{ $product->name }}', {{ $product->price }})"
         >
             <p class="font-medium">{{ $product->name }}</p>
