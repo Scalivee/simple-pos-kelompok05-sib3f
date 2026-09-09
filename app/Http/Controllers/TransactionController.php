@@ -29,6 +29,7 @@ class TransactionController extends Controller
             (object) ['id' => 5, 'name' => 'Roti Tawar', 'price' => 12000, 'stock' => 15],
             (object) ['id' => 6, 'name' => 'Gula Pasir 1kg', 'price' => 15000, 'stock' => 5],
         ]);
+        return view('pos.create', ['products' => $products]);
     }
 
     public function store()
