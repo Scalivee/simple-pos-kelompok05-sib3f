@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->index('category_id');
+        Schema::table('transaction_details', function (Blueprint $table) {
+            $table->index('product_id');
         });
+    }
 
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->index('user_id');
+    public function down(): void
+    {
+        Schema::table('transaction_details', function (Blueprint $table) {
+            $table->dropIndex(['product_id']);
         });
     }
 };
