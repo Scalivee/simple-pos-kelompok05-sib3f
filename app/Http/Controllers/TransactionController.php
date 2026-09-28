@@ -30,7 +30,9 @@ class TransactionController extends Controller
     }
     public function index(): View
     {
-        return view('transactions.index');
+        $transactions = Transaction::latest()->paginate(15);
+
+        return view('transactions.index', compact('transactions'));
     }
     public function show(string $id)
     {
