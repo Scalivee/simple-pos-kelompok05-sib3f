@@ -9,6 +9,8 @@
         <p class="font-medium">
             Transaksi #{{ $transaction->id }}
             &middot;
+            Kasir: {{ $transaction->user->name }}
+            &middot;
             {{ $transaction->created_at->format('d M Y H:i') }}
             &middot;
             Rp {{ number_format($transaction->total) }}
