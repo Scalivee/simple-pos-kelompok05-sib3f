@@ -57,3 +57,46 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+
+==============================================
+## Dokumentasi Validasi dan Keamanan Input
+
+### Pengujian Validasi Transaksi dengan cURL
+
+Pengujian dilakukan pada endpoint `/pos` untuk memastikan validasi pada data
+transaksi berjalan dengan benar.
+
+#### 1. Pengujian quantity = 0
+
+Data yang dikirim:
+
+```text
+product_id = 1
+qty = 0
+
+### Pengujian Manipulasi Total Transaksi
+
+Validasi `numeric` pada field `total` tidak cukup untuk mencegah manipulasi
+total transaksi.
+
+Validasi `numeric` hanya memastikan bahwa nilai yang dikirim oleh client
+berupa angka. Validasi tersebut tidak memastikan bahwa nilai tersebut benar
+atau sesuai dengan harga produk dan jumlah barang yang dibeli.
+
+Sebagai contoh, apabila total transaksi sebenarnya Rp20.000, pengguna dapat
+memanipulasi request dan mengirimkan `total` sebesar Rp1.000. Nilai Rp1.000
+tetap lolos apabila aturan validasinya hanya `numeric`, karena nilai tersebut
+memang berupa angka.
+
+Oleh karena itu, nilai total dari client tidak boleh dipercaya. Server harus
+menghitung ulang total transaksi berdasarkan harga produk yang tersimpan di
+database dan quantity yang dikirimkan.
+
+Pada aplikasi ini, harga produk diambil kembali dari database. Kemudian
+subtotal dihitung dengan mengalikan harga produk dengan quantity. Setelah
+semua item diproses, seluruh subtotal dijumlahkan menjadi total transaksi.
+
+Dengan cara tersebut, manipulasi nilai total yang dikirim dari form tidak dapat
+langsung menentukan total transaksi yang disimpan oleh server.
