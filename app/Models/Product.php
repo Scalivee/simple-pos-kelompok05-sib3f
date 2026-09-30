@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
+    protected $fillable = ['category_id', 'name', 'price', 'stock'];
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
@@ -21,6 +23,7 @@ class Product extends Model
             'transaction_details'
         );
     }
+
     public function details(): HasMany
     {
         return $this->hasMany(TransactionDetail::class);
