@@ -29,20 +29,33 @@
 
 <form method="POST"
       action="{{ route('transactions.store') }}"
-      x-data="{
-          cart: [],
+    x-data="{
+        cart: [],
 
-          addToCart(id, name, price) {
-              this.cart.push({ id, name, price });
-          },
+    addToCart(id, name, price) {
+        const index = this.cart.findIndex(
+            item => Number(item.id) === Number(id)
+        );
 
-          subtotal() {
-              return this.cart.reduce(
-                  (sum, item) => sum + item.price,
-                  0
-              );
-          }
-      }">
+        if (index !== -1) {
+            this.cart[index].qty += 1;
+        } else {
+            this.cart.push({
+                id: id,
+                name: name,
+                price: price,
+                qty: 1
+            });
+        }
+    },
+
+        subtotal() {
+            return this.cart.reduce(
+                (sum, item) => sum + (item.price * item.qty),
+                0
+            );
+        }
+    }">
 
     @csrf
 
@@ -83,6 +96,10 @@
                 <p x-text="item.name + ' - Rp ' + item.price">
                 </p>
 
+                <p class="text-sm text-slate-500"
+                x-text="'Qty: ' + item.qty">
+                </p>
+
                 <input
                     type="hidden"
                     :name="'items[' + index + '][product_id]'"
@@ -91,7 +108,7 @@
                 <input
                     type="hidden"
                     :name="'items[' + index + '][qty]'"
-                    value="1">
+                    :value="item.qty">
 
             </div>
 
