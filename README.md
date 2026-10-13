@@ -74,7 +74,8 @@ Data yang dikirim:
 
 ```text
 product_id = 1
-qty = 0
+qty = 0 
+```
 
 ### Pengujian Manipulasi Total Transaksi
 
@@ -100,3 +101,67 @@ semua item diproses, seluruh subtotal dijumlahkan menjadi total transaksi.
 
 Dengan cara tersebut, manipulasi nilai total yang dikirim dari form tidak dapat
 langsung menentukan total transaksi yang disimpan oleh server.
+
+
+## Skenario Uji Manual Autentikasi dan Otorisasi
+
+### 1. Pengujian sebagai Admin
+
+**Tujuan:** Memastikan pengguna dengan peran admin dapat mengakses halaman kasir, transaksi, produk, dan kategori.
+
+**Akun pengujian:**
+- Email: `admin@pos.test`
+- Password: `password`
+- Role: `admin`
+
+**Langkah pengujian:**
+
+1. Buka halaman `/login`.
+2. Masukkan email dan password akun admin, lalu klik tombol masuk.
+3. Buka halaman `/pos`.
+4. Buka halaman `/transactions`.
+5. Buka halaman `/products`.
+6. Buka halaman `/categories`.
+7. Klik tombol keluar, kemudian coba akses `/products` kembali.
+
+**Hasil yang diharapkan:**
+
+- Login berhasil dan pengguna diarahkan ke halaman kasir.
+- Halaman `/pos` dan `/transactions` dapat dibuka.
+- Halaman `/products` dan `/categories` dapat dibuka tanpa error otorisasi.
+- Setelah logout, pengguna yang mencoba membuka `/products` diarahkan ke halaman login.
+
+### 2. Pengujian sebagai Kasir
+
+**Tujuan:** Memastikan pengguna dengan peran kasir hanya dapat mengakses halaman yang diizinkan.
+
+**Akun pengujian:**
+- Email: `kasir@pos.test`
+- Password: `password`
+- Role: `kasir`
+
+**Langkah pengujian:**
+
+1. Buka halaman `/login`.
+2. Masukkan email dan password akun kasir, lalu klik tombol masuk.
+3. Buka halaman `/pos`.
+4. Buka halaman `/transactions`.
+5. Buka halaman `/products` secara langsung melalui address bar browser.
+6. Buka halaman `/categories` secara langsung melalui address bar browser.
+7. Klik tombol keluar, kemudian coba akses `/pos` kembali.
+
+**Hasil yang diharapkan:**
+
+- Login berhasil dan pengguna diarahkan ke halaman kasir.
+- Halaman `/pos` dan `/transactions` dapat dibuka.
+- Halaman `/products` dan `/categories` ditolak dengan status HTTP 403 Forbidden.
+- Pesan penolakan sesuai dengan pesan yang ditetapkan pada middleware `EnsureUserHasRole`.
+- Setelah logout, pengguna yang mencoba membuka `/pos` diarahkan ke halaman login.
+
+### 3. Catatan Pelaksanaan Pengujian
+
+- Pengujian dilakukan menggunakan akun demo pada lingkungan pengembangan lokal.
+- Setiap pengujian dilakukan dengan login menggunakan akun sesuai peran yang diuji.
+- Halaman yang dilindungi harus diuji dengan mengakses URL secara langsung, bukan hanya melalui menu navigasi.
+- Hasil aktual dicatat dan dibandingkan dengan hasil yang diharapkan.
+- Apabila hasil aktual berbeda dari hasil yang diharapkan, lakukan pemeriksaan terhadap middleware, route, dan konfigurasi peran pengguna.
