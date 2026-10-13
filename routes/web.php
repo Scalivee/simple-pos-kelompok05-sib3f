@@ -23,6 +23,11 @@ Route::middleware('guest')->group(function () {
 
     Route::post('/login', [LoginController::class, 'store'])
         ->name('login.store');
+
+    // Halaman informasi khusus tamu
+    Route::get('/info', function () {
+        return view('info');
+    })->name('info');
 });
 
 /*
