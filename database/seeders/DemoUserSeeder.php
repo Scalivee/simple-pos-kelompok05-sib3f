@@ -26,5 +26,14 @@ class DemoUserSeeder extends Seeder
                 'password' => 'password',
             ]
         );
+
+        User::firstOrCreate(
+            ['email' => 'manager@pos.test'],
+            [
+                'name' => 'Manager Kafe',
+                'role' => 'manager',
+                'password' => 'password',
+            ]
+        );
     }
 }
