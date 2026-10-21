@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -77,5 +78,8 @@ Route::middleware('auth')->group(function () {
 
         Route::resource('products', ProductController::class)
             ->except(['show', 'destroy']);
+
+        Route::get('/reports', [ReportController::class, 'index'])
+            ->name('reports.index');
     });
 });
