@@ -15,6 +15,8 @@
 <body>
     <h1>Laporan Penjualan</h1>
     <p>Periode {{ $from }} s.d. {{ $to }}</p>
+    <p>Kategori: {{ $categoryName }}</p>
+    <p>Total mencakup seluruh nilai transaksi yang sesuai filter.</p>
     <p>Total penjualan: <strong>Rp {{ number_format($totalPenjualan) }}</strong> dari {{ $jumlahTransaksi }} transaksi</p>
 
     <p>50 transaksi terbaru pada periode ini:</p>
