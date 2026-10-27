@@ -70,13 +70,30 @@ class ReportController extends Controller
         $categoryId = $this->resolveCategoryId($request);
         $query = $this->filteredQuery($from, $to, $categoryId);
 
+        $produkTerlaris = \App\Models\Product::query()
+            ->select('products.id', 'products.name')
+            ->selectRaw('SUM(transaction_details.qty) as total_terjual')
+            ->join('transaction_details', 'products.id', '=', 'transaction_details.product_id')
+            ->join('transactions', 'transactions.id', '=', 'transaction_details.transaction_id')
+            ->whereBetween('transactions.created_at', [$from, $to])
+            ->when($categoryId, function ($products) use ($categoryId) {
+                $products->where('products.category_id', $categoryId);
+            })
+            ->groupBy('products.id', 'products.name')
+            ->orderByDesc('total_terjual')
+            ->limit(10)
+            ->get();
+
         $pdf = Pdf::loadView('reports.pdf', [
             'totalPenjualan' => $query->sum('total'),
             'jumlahTransaksi' => $query->count(),
             'transactions' => $query->latest()->limit(50)->get(),
+            'produkTerlaris' => $produkTerlaris,
             'from' => $from->toDateString(),
             'to' => $to->toDateString(),
-            'categoryName' => $categoryId ? Category::findOrFail($categoryId)->name : 'Semua kategori',
+            'categoryName' => $categoryId
+                ? Category::findOrFail($categoryId)->name
+                : 'Semua kategori',
         ]);
 
         return $pdf->download('laporan-penjualan.pdf');
