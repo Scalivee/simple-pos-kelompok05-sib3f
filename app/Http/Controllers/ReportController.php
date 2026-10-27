@@ -16,6 +16,7 @@ use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Imports\ProductImport;
 
 class ReportController extends Controller
 {
@@ -87,9 +88,9 @@ class ReportController extends Controller
     // }
     public function importForm(): View
     {
-    $importErrors = ImportError::latest()->get();
+        $importErrors = ImportError::latest()->get();
 
-    return view('reports.import', compact('importErrors'));
+        return view('reports.import', compact('importErrors'));
     }
 
     public function import(Request $request): RedirectResponse
@@ -103,6 +104,29 @@ class ReportController extends Controller
         ProcessProductImport::dispatch($path);
 
         return back()->with('success', 'Import sedang diproses di background.');
+    }
+
+    public function importExcel(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'csv' => ['required', 'file', 'mimes:csv,txt'],
+        ]);
+
+        $import = new ProductImport();
+
+        Excel::import($import, $request->file('csv'));
+
+        $failedRows = collect($import->failures())
+            ->pluck('row')
+            ->unique()
+            ->count();
+
+        return back()->with(
+            'success_excel',
+            "{$import->created} produk baru, " .
+                "{$import->updated} diperbarui, " .
+                "{$failedRows} baris dilewati."
+        );
     }
 
     private function resolveDateRange(Request $request): array
