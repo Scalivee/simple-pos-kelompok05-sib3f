@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\SalesReportExport;
 use App\Jobs\ProcessProductImport;
 use App\Models\Category;
+use App\Models\ImportError;
 use App\Models\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
@@ -80,9 +81,15 @@ class ReportController extends Controller
         return $pdf->download('laporan-penjualan.pdf');
     }
 
+    // public function importForm(): View
+    // {
+    //     return view('reports.import');
+    // }
     public function importForm(): View
     {
-        return view('reports.import');
+    $importErrors = ImportError::latest()->get();
+
+    return view('reports.import', compact('importErrors'));
     }
 
     public function import(Request $request): RedirectResponse
