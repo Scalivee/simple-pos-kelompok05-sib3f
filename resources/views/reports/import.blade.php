@@ -38,4 +38,37 @@
             Import
         </button>
     </form>
+
+    <div class="mt-8">
+        <h2 class="text-lg font-semibold mb-3">Daftar Baris Gagal Diimpor</h2>
+
+        @if ($importErrors->isEmpty())
+            <p class="text-sm text-slate-500">
+                Belum ada baris CSV yang gagal diimpor.
+            </p>
+        @else
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100">
+                            <th class="border p-2 text-left">Nomor Baris</th>
+                            <th class="border p-2 text-left">Pesan Error</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($importErrors as $error)
+                            <tr>
+                                <td class="border p-2">
+                                    {{ $error->row_number }}
+                                </td>
+                                <td class="border p-2">
+                                    {{ $error->error_message }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
+    </div>
 @endsection
