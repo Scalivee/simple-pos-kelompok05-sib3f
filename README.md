@@ -58,9 +58,8 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-
-
 ==============================================
+
 ## Dokumentasi Validasi dan Keamanan Input
 
 ### Pengujian Validasi Transaksi dengan cURL
@@ -74,7 +73,7 @@ Data yang dikirim:
 
 ```text
 product_id = 1
-qty = 0 
+qty = 0
 ```
 
 ### Pengujian Manipulasi Total Transaksi
@@ -102,7 +101,6 @@ semua item diproses, seluruh subtotal dijumlahkan menjadi total transaksi.
 Dengan cara tersebut, manipulasi nilai total yang dikirim dari form tidak dapat
 langsung menentukan total transaksi yang disimpan oleh server.
 
-
 ## Skenario Uji Manual Autentikasi dan Otorisasi
 
 ### 1. Pengujian sebagai Admin
@@ -110,6 +108,7 @@ langsung menentukan total transaksi yang disimpan oleh server.
 **Tujuan:** Memastikan pengguna dengan peran admin dapat mengakses halaman kasir, transaksi, produk, dan kategori.
 
 **Akun pengujian:**
+
 - Email: `admin@pos.test`
 - Password: `password`
 - Role: `admin`
@@ -136,6 +135,7 @@ langsung menentukan total transaksi yang disimpan oleh server.
 **Tujuan:** Memastikan pengguna dengan peran kasir hanya dapat mengakses halaman yang diizinkan.
 
 **Akun pengujian:**
+
 - Email: `kasir@pos.test`
 - Password: `password`
 - Role: `kasir`
@@ -165,3 +165,20 @@ langsung menentukan total transaksi yang disimpan oleh server.
 - Halaman yang dilindungi harus diuji dengan mengakses URL secara langsung, bukan hanya melalui menu navigasi.
 - Hasil aktual dicatat dan dibandingkan dengan hasil yang diharapkan.
 - Apabila hasil aktual berbeda dari hasil yang diharapkan, lakukan pemeriksaan terhadap middleware, route, dan konfigurasi peran pengguna.
+
+## Identifikasi Proses yang Cocok Menggunakan Queue
+
+### Pengiriman Laporan Penjualan melalui Email
+
+Proses lain pada aplikasi Simple POS yang cocok menggunakan Queue adalah pengiriman laporan penjualan melalui email.
+
+**Alasan penggunaan Queue:**
+
+1. Pengiriman email membutuhkan komunikasi dengan layanan email yang dapat memerlukan waktu.
+2. Jika proses pengiriman dilakukan secara langsung, pengguna harus menunggu hingga proses tersebut selesai.
+3. Dengan Queue, pengiriman email dapat dijalankan di latar belakang sehingga aplikasi tetap responsif dan pengguna dapat melanjutkan aktivitas lainnya.
+4. Jika pengiriman mengalami kegagalan sementara, proses dapat dikonfigurasi untuk dicoba kembali tanpa harus mengulangi seluruh aktivitas pengguna.
+
+**Kesimpulan:**
+
+Penggunaan Queue pada proses pengiriman laporan penjualan melalui email dapat meningkatkan responsivitas aplikasi Simple POS dan membantu menangani proses pengiriman secara lebih efisien.
