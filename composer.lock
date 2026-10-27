@@ -9353,5 +9353,8 @@
         "php": "^8.2"
     },
     "platform-dev": {},
+    "platform-overrides": {
+        "php": "8.4.25"
+    },
     "plugin-api-version": "2.9.0"
 }

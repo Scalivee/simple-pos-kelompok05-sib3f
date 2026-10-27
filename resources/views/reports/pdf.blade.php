@@ -19,6 +19,34 @@
     <p>Total mencakup seluruh nilai transaksi yang sesuai filter.</p>
     <p>Total penjualan: <strong>Rp {{ number_format($totalPenjualan) }}</strong> dari {{ $jumlahTransaksi }} transaksi</p>
 
+    
+    <h2 style="font-size: 15px; margin-top: 24px;">10 Produk Terlaris</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 10%;">No.</th>
+                <th>Nama Produk</th>
+                <th class="right" style="width: 30%;">Jumlah Terjual</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($produkTerlaris as $index => $produk)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $produk->name }}</td>
+                    <td class="right">{{ number_format($produk->total_terjual) }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="3" style="text-align: center;">
+                        Tidak ada data penjualan produk pada periode ini.
+                    </td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+
     <p>50 transaksi terbaru pada periode ini:</p>
     <table>
         <thead>
