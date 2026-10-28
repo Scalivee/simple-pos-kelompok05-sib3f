@@ -1,4 +1,3 @@
-
 <nav class="bg-slate-900 text-white px-4 py-3 flex gap-4 items-center">
     <span class="font-semibold">Simple POS</span>
 
