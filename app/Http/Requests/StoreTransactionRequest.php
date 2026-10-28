@@ -21,12 +21,26 @@ class StoreTransactionRequest extends FormRequest
             'items.*.qty' => ['required', 'integer', 'min:1'],
         ];
     }
-    public function withValidator($validator)
+
+public function withValidator($validator): void
 {
     $validator->after(function ($validator) {
+        // Jangan cek stok jika validasi items gagal.
+        if ($validator->errors()->has('items') ||
+            $validator->errors()->has('items.*.product_id') ||
+            $validator->errors()->has('items.*.qty')) {
+            return;
+        }
+
+        $items = $this->input('items', []);
+
+        if (!is_array($items)) {
+            return;
+        }
+
         $quantities = [];
 
-        foreach ($this->items as $item) {
+        foreach ($items as $item) {
             $productId = $item['product_id'];
             $qty = $item['qty'];
 
