@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\TransactionController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\CategoryController;
 
 Route::post('/login', [AuthController::class, 'login'])
     ->middleware('throttle:login');
@@ -23,4 +24,7 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
     Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])
         ->middleware('abilities:transactions:read');
+
+    Route::get('/categories', [CategoryController::class, 'index'])
+        ->name('api.categories.index');
 });
