@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
+use Illuminate\Support\Carbon;
 
 class ApiTransactionTest extends TestCase
 {
@@ -140,5 +141,28 @@ class ApiTransactionTest extends TestCase
         $this->getJson("/api/transactions/{$transaction->id}")
             ->assertOk()
             ->assertJsonPath('data.id', $transaction->id);
+    }
+    public function test_expired_token_is_unauthorized(): void
+    {
+        Carbon::setTestNow(Carbon::parse('2026-01-01 10:00:00'));
+
+        try {
+            $user = User::factory()->create();
+
+            Sanctum::actingAs($user, ['products:read']);
+
+            $token = $user->createToken(
+                'test-expired-token',
+                ['products:read'],
+                now()->addHour()
+            )->plainTextToken;
+            Carbon::setTestNow(now()->addHours(2));
+            app('auth')->forgetGuards();
+            $this->withToken($token)
+            ->getJson('/api/v1/products')
+            ->assertUnauthorized();
+        } finally {
+            Carbon::setTestNow();
+        }
     }
 }
