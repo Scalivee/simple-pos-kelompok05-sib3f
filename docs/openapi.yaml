@@ -166,6 +166,13 @@ paths:
       summary: Buat transaksi baru
       security:
         - bearerAuth: []
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          description: Kunci unik untuk mencegah transaksi duplikat.
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -247,3 +254,14 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
+
+
+# Pengujian API menggunakan Postman dan cURL:
+# Postman lebih mudah digunakan karena menyediakan antarmuka grafis untuk mengatur
+# method, URL, header, authorization, dan body request. Respons API juga ditampilkan
+# dalam format JSON sehingga lebih mudah dibaca dan diperiksa.
+# Sementara itu, cURL dijalankan melalui terminal dengan menuliskan perintah secara
+# manual. cURL lebih praktis untuk pengujian cepat, otomatisasi, dan integrasi dengan
+# script, tetapi membutuhkan ketelitian dalam menuliskan parameter dan header.
+# Keduanya dapat digunakan untuk menguji endpoint API, hanya berbeda pada cara
+# penggunaan dan kenyamanan antarmukanya.
